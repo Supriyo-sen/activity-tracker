@@ -1,12 +1,12 @@
-import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
+import Button from "../components/Button";
+import { Stack } from "expo-router";
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.b!</Text>
-      <StatusBar style="auto" />
-    </View>
+      <Stack screenOptions={{headerShown: false}}>
+        <Stack.Screen name="overview"/>
+      </Stack>
   );
 }
 
