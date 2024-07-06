@@ -1,9 +1,9 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 
-const Activity = ({ title, img }) => {
+const Activity = ({ title, img, onPress }) => {
   return (
-    <TouchableOpacity style={styles.activity}>
+    <TouchableOpacity style={styles.activity} onPress={onPress}>
       <View style={styles.imgcontainer}>
         <Image style={styles.image} source={img} resizeMode="contain" />
       </View>
@@ -22,12 +22,21 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+
   imgcontainer: {
     width: 163,
     height: 163,
     backgroundColor: "#ffffff",
     padding: 10,
     borderRadius: 4,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    elevation: 3,
   },
   image: {
     width: "100%",
