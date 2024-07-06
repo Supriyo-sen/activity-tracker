@@ -17,6 +17,8 @@ const RootScreen = () => {
         <Stack.Screen name="index" />
         <Stack.Screen name="details" />
         <Stack.Screen name="activity" />
+        <Stack.Screen name="me3activity" />
+        <Stack.Screen name="uploadDetails" />
       </Stack>
       {router !== "/" && <Footer />}
     </>
