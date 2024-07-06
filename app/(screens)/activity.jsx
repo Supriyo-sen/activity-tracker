@@ -1,13 +1,21 @@
 import { ImageBackground, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import Activity from '../../components/Activity'
 
 const activity = () => {
   return (
-    <View style={styles.container}>
     <ImageBackground source={require("../../assets/images/app-bg.png")} resizeMode="cover" style={styles.image}>
-      <Text style={styles.text}>Inside</Text>
-    </ImageBackground>
+    <View style={styles.container}>
+       <View style={styles.container}>
+        <View style={styles.main}>
+          <View style={styles.activity_items}>
+            <Activity title="Activity 1" img={require("../../assets/images/activity_1.png")} />
+          </View>
+        </View>
+      </View>
   </View>
+
+    </ImageBackground>
   )
 }
 
@@ -15,7 +23,21 @@ export default activity
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    alignItems: "center",
+    padding: 14,
+  },
+  main:{
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    width:"100%",
+    height:"100%"
+  },
+  activity_items: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 15,
+    justifyContent: "center",
   },
   image: {
     flex: 1,
