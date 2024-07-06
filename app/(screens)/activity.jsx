@@ -1,8 +1,11 @@
 import { ImageBackground, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import Activity from "../../components/Activity";
+import { useRouter } from "expo-router";
 
 const activity = () => {
+  const router = useRouter();
+
   return (
     <ImageBackground
       source={require("../../assets/images/app-bg.png")}
@@ -14,15 +17,16 @@ const activity = () => {
           <View style={styles.main}>
             <View style={styles.activity_items}>
               <Activity
-                title="Activity 1"
+                onPress={() => router.navigate("me3activity")}
+                title="ME-3 Activity"
                 img={require("../../assets/images/activity_1.png")}
               />
               <Activity
-                title="Activity 2"
+                title="Other Activities"
                 img={require("../../assets/images/activity_2.png")}
               />
               <Activity
-                title="Activity 3"
+                title="Capture Activity After Completion"
                 img={require("../../assets/images/activity_3.png")}
               />
             </View>
