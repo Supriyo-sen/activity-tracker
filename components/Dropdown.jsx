@@ -1,13 +1,23 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
+  Modal,
+  FlatList,
+  TouchableWithoutFeedback,
 } from "react-native";
 
-const Dropdown = ({ data, onSelect, size = "full", selectedItem, isOpen, onToggle, header }) => {
+const Dropdown = ({
+  data,
+  onSelect,
+  size = "full",
+  selectedItem,
+  isOpen,
+  onToggle,
+  header,
+}) => {
   const getSizeStyle = () => {
     switch (size) {
       case "full":
@@ -23,33 +33,47 @@ const Dropdown = ({ data, onSelect, size = "full", selectedItem, isOpen, onToggl
 
   const handleSelect = (item) => {
     onSelect(item);
+    onToggle(); 
   };
 
-  const renderItem = (item) => (
+  const renderItem = ({ item }) => (
     <TouchableOpacity key={item.value} onPress={() => handleSelect(item)}>
       <Text style={styles.dropdownItem}>{item.label}</Text>
     </TouchableOpacity>
   );
 
   return (
-    <View style={styles.main}>
+    <View style={[styles.main, getSizeStyle()]}>
       <Text style={styles.header}>{header}</Text>
-      <View style={[styles.container, getSizeStyle()]} onStartShouldSetResponder={() => true}>
-        <TouchableOpacity
-          style={styles.dropdownButton}
-          onPress={(e) => {
-            e.stopPropagation();
-            onToggle();
-          }}
-        >
-          <Text style={styles.dropdownText}>
-            {selectedItem?.label || ""}
-          </Text>
-        </TouchableOpacity>
-        {isOpen && (
-          <View style={[styles.dropdownList, getSizeStyle()]}>{data.map(renderItem)}</View>
-        )}
-      </View>
+      <TouchableOpacity
+        style={styles.dropdownButton}
+        onPress={(e) => {
+          e.stopPropagation();
+          onToggle(); 
+        }}
+      >
+        <Text style={styles.dropdownText}>
+          {selectedItem?.label || "Select an option"}
+        </Text>
+      </TouchableOpacity>
+      <Modal
+        transparent={true}
+        visible={isOpen}
+        animationType="fade"
+        onRequestClose={() => onToggle()}
+      >
+        <TouchableWithoutFeedback onPress={() => onToggle()}>
+          <View style={styles.modalOverlay}>
+            <View style={styles.dropdownContainer}>
+              <FlatList
+                data={data}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.value.toString()}
+              />
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
     </View>
   );
 };
@@ -59,42 +83,56 @@ const styles = StyleSheet.create({
     width: 365,
     height: 90,
     backgroundColor: "#E4EAFF",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "flex-start",
-    padding: 10,
     borderRadius: 5,
+    padding: 10,
     flexDirection: "column",
     position: "relative",
-    gap: 10,
-  },
-  container: {
-    position: "relative",
+    marginVertical: 3,  
   },
   dropdownButton: {
     padding: 10,
     backgroundColor: "#ffffff",
     borderRadius: 5,
+    borderWidth: 1,
+    borderColor: "#ccc",
     alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
-  header:{
+  dropdownText: {
+    color: "#333",
+  },
+  header: {
     color: "#0D38CE",
     fontSize: 12,
     fontWeight: "500",
+    marginBottom: 5,
   },
-  dropdownList: {
-    position: "absolute",
-    top: 50,
-    left: 0,
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  dropdownContainer: {
     backgroundColor: "#fff",
     borderRadius: 5,
     borderWidth: 1,
     borderColor: "#ccc",
-    zIndex: 1,
+    width: "80%", 
+    maxHeight: 200,
+    overflow: "scroll",
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 5,
+    paddingHorizontal: 4,
+    paddingVertical: 5,
   },
   dropdownItem: {
-    padding: 10,
-    borderBottomWidth: 1,
+    padding: 15,
+    // borderBottomWidth: 1,
     borderColor: "#ccc",
   },
 });

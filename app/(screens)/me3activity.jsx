@@ -1,13 +1,79 @@
-import { ImageBackground, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import { ImageBackground, StyleSheet, Text, TouchableWithoutFeedback, View } from "react-native";
+import React, { useState } from "react";
+import Dropdown from "../../components/Dropdown";
+import { useRouter } from "expo-router";
+import { options } from "../../static/index";
+import Button from "../../components/Button";
+
+
+
 
 const me3activity = () => {
+  const router = useRouter();
+  const [openDropdown, setOpenDropdown] = useState(null); 
+  const [selectedItem1, setSelectedItem1] = useState(null);
+  const [selectedItem2, setSelectedItem2] = useState(null);
+  const [selectedItem3, setSelectedItem3] = useState(null);
+
+  const handleToggleDropdown = (dropdownId) => {
+    setOpenDropdown(dropdownId === openDropdown ? null : dropdownId);
+  };
+
+  const handleCloseDropdowns = () => {
+    setOpenDropdown(null); 
+  };
   return (
+    <TouchableWithoutFeedback onPress={handleCloseDropdowns}>
     <ImageBackground
       source={require("../../assets/images/app-bg.png")}
       resizeMode="cover"
       style={styles.image}
-    ></ImageBackground>
+    >
+       <View style={styles.container}>
+        <View style={styles.main}>
+          <View style={styles.dropitems}>
+            <Dropdown
+              data={options}
+              size="full"
+              header={"Select Category :"}
+              isOpen={openDropdown === "dropdown1"}
+              onToggle={() => handleToggleDropdown("dropdown1")}
+              selectedItem={selectedItem1}
+              onSelect={(item) => {
+                setSelectedItem1(item);
+                handleCloseDropdowns();
+              }}
+            />
+            <Dropdown
+              data={options}
+              size="full"
+              header={"Select Indicator :"}
+              isOpen={openDropdown === "dropdown2"}
+              onToggle={() => handleToggleDropdown("dropdown2")}
+              selectedItem={selectedItem2}
+              onSelect={(item) => {
+                setSelectedItem2(item);
+                handleCloseDropdowns(); 
+              }}
+            />
+            <Dropdown
+              data={options}
+              size="full"
+              header={"Select Work Status :"}
+              isOpen={openDropdown === "dropdown3"}
+              onToggle={() => handleToggleDropdown("dropdown3")}
+              selectedItem={selectedItem3}
+              onSelect={(item) => {
+                setSelectedItem3(item);
+                handleCloseDropdowns();
+              }}
+            />
+          </View>
+          <Button text={"Save"} size="full" onPress={()=>router.navigate("activity")}/>
+        </View>
+      </View>
+    </ImageBackground>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -21,7 +87,7 @@ const styles = StyleSheet.create({
   main: {
     display: "flex",
     flexDirection: "column",
-    justifyContent: "flex-start",
+    justifyContent: "space-between",
     width: "100%",
     height: "100%",
   },
@@ -29,4 +95,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
   },
+  dropitems: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 15,
+  },
 });
+
+
+
+
+// Insert Work ID :

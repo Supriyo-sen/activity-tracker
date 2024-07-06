@@ -3,62 +3,63 @@ import { StyleSheet, Text, View, TouchableWithoutFeedback } from "react-native";
 import Dropdown from "../../components/Dropdown";
 import Button from "../../components/Button";
 import { useRouter } from "expo-router";
-
-const options = [
-  { label: "Option 1", value: 1 },
-  { label: "Option 2", value: 2 },
-  { label: "Option 3", value: 3 },
-];
+import { options } from "../../static/index";
 
 const Index = () => {
   const router = useRouter();
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [openDropdown, setOpenDropdown] = useState(null);
+  const [openDropdown, setOpenDropdown] = useState(null); 
+  const [selectedItem1, setSelectedItem1] = useState(null);
+  const [selectedItem2, setSelectedItem2] = useState(null);
+  const [selectedItem3, setSelectedItem3] = useState(null);
 
-  const handleSelect = (item) => {
-    setSelectedItem(item);
-    setOpenDropdown(null);
+  const handleToggleDropdown = (dropdownId) => {
+    setOpenDropdown(dropdownId === openDropdown ? null : dropdownId);
   };
 
-  const handleDropdownToggle = (dropdownIndex) => {
-    setOpenDropdown(openDropdown === dropdownIndex ? null : dropdownIndex);
-  };
-
-  const closeDropdowns = () => {
-    setOpenDropdown(null);
+  const handleCloseDropdowns = () => {
+    setOpenDropdown(null); // Close all dropdowns
   };
 
   return (
-    <TouchableWithoutFeedback onPress={closeDropdowns}>
+    <TouchableWithoutFeedback onPress={handleCloseDropdowns}>
       <View style={styles.container}>
         <View style={styles.main}>
           <View style={styles.dropitems}>
             <Dropdown
               data={options}
-              onSelect={handleSelect}
-              selectedItem={selectedItem}
               size="full"
-              isOpen={openDropdown === 1}
-              onToggle={() => handleDropdownToggle(1)}
               header={"1. Select District :"}
+              isOpen={openDropdown === "dropdown1"}
+              onToggle={() => handleToggleDropdown("dropdown1")}
+              selectedItem={selectedItem1}
+              onSelect={(item) => {
+                setSelectedItem1(item);
+                handleCloseDropdowns();
+              }}
             />
             <Dropdown
               data={options}
-              onSelect={handleSelect}
-              selectedItem={selectedItem}
               size="full"
-              isOpen={openDropdown === 2}
-              onToggle={() => handleDropdownToggle(2)}
               header={"2. Select Block :"}
+              isOpen={openDropdown === "dropdown2"}
+              onToggle={() => handleToggleDropdown("dropdown2")}
+              selectedItem={selectedItem2}
+              onSelect={(item) => {
+                setSelectedItem2(item);
+                handleCloseDropdowns(); 
+              }}
             />
             <Dropdown
               data={options}
-              onSelect={handleSelect}
-              selectedItem={selectedItem}
               size="full"
-              isOpen={openDropdown === 3}
-              onToggle={() => handleDropdownToggle(3)}
               header={"3. Select GP :"}
+              isOpen={openDropdown === "dropdown3"}
+              onToggle={() => handleToggleDropdown("dropdown3")}
+              selectedItem={selectedItem3}
+              onSelect={(item) => {
+                setSelectedItem3(item);
+                handleCloseDropdowns();
+              }}
             />
           </View>
           <Button text={"Set Details"} size="full" onPress={()=>router.navigate("activity")}/>
