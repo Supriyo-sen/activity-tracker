@@ -1,23 +1,23 @@
-import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-const Button = ({ text, size = 'full', buttonStyle, textStyle, onPress }) => {
+const Button = ({ text, size = "full", buttonStyle, textStyle, onPress }) => {
   const getSizeStyle = () => {
     switch (size) {
-      case 'full':
-        return { width: '100%' };
-      case 'half':
-        return { width: '50%' };
-      case 'small':
-        return { width: 100 }; 
+      case "full":
+        return { width: "100%" };
+      case "half":
+        return { width: "50%" };
+      case "small":
+        return { width: 100 };
       default:
-        return { width: '100%' };
+        return { width: "100%" };
     }
   };
 
   return (
-    <TouchableOpacity 
-      style={[styles.button, getSizeStyle(), buttonStyle]} 
+    <TouchableOpacity
+      style={[styles.button, getSizeStyle(), buttonStyle]}
       activeOpacity={0.8}
       onPress={onPress}
     >
@@ -29,15 +29,15 @@ const Button = ({ text, size = 'full', buttonStyle, textStyle, onPress }) => {
 const styles = StyleSheet.create({
   button: {
     padding: 15,
-    borderRadius: 10,
-    backgroundColor: '#0D38CE',
-    justifyContent: 'center',
-    alignItems: 'center',
+    borderRadius: 4,
+    backgroundColor: "#0D38CE",
+    justifyContent: "center",
+    alignItems: "center",
   },
   text: {
-    color: 'white',
+    color: "white",
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
 
