@@ -19,8 +19,9 @@ const RootScreen = () => {
         <Stack.Screen name="activity" />
         <Stack.Screen name="me3activity" />
         <Stack.Screen name="uploadDetails" />
+        <Stack.Screen name="camerapage" />
       </Stack>
-      {router !== "/" && <Footer />}
+      {router !== "/" && router !== "/camerapage" && <Footer />}
     </>
   );
 };

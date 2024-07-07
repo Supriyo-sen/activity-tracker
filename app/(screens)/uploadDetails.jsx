@@ -1,15 +1,11 @@
 import {
   ImageBackground,
   StyleSheet,
-  Text,
-  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import React, { useState } from "react";
-import Dropdown from "../../components/Dropdown";
 import Inputfield from "../../components/Inputfield";
-import { useRouter } from "expo-router";
-import { options } from "../../static/index";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import Button from "../../components/Button";
 import Clickedimg from "../../components/Clickedimg";
 
