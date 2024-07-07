@@ -1,5 +1,4 @@
 import { Alert, BackHandler, StyleSheet, Text, View } from "react-native";
-import Button from "../components/Button";
 import { Stack } from "expo-router";
 import { useEffect } from "react";
 

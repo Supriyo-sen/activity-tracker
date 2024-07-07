@@ -4,6 +4,7 @@ import Dropdown from "../../components/Dropdown";
 import Button from "../../components/Button";
 import { useRouter } from "expo-router";
 import { options } from "../../static/index";
+import IconButton from "../../components/IconButton";
 
 const Index = () => {
   const router = useRouter();
@@ -17,7 +18,7 @@ const Index = () => {
   };
 
   const handleCloseDropdowns = () => {
-    setOpenDropdown(null); // Close all dropdowns
+    setOpenDropdown(null); 
   };
 
   return (
@@ -61,6 +62,7 @@ const Index = () => {
                 handleCloseDropdowns();
               }}
             />
+            
           </View>
           <Button text={"Set Details"} size="full" onPress={()=>router.navigate("activity")}/>
         </View>

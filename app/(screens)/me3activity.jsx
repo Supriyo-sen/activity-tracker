@@ -85,7 +85,7 @@ const me3activity = () => {
             <Button
               text={"Save"}
               size="full"
-              onPress={() => router.navigate("uploadDetails")}
+              onPress={() => router.navigate("camerapage")}
             />
           </View>
         </View>
