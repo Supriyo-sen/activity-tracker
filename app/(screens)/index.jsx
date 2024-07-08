@@ -16,7 +16,7 @@ const Index = () => {
   const [blocks, setBlocks] = useState();
   const [gps, setGps] = useState();
 
-  const baseUrl = "http://192.168.1.102:5000/area";
+  const baseUrl = "http://192.168.0.59:5000/area";
   useEffect(() => {
     const fetchDistricts = async () => {
       try {
@@ -25,12 +25,13 @@ const Index = () => {
             "Content-Type": "application/json",
           },
         });
-
+        console.log(response.data);
         const data = response.data.map((district) => ({
           label: district.district_name,
           value: district.district_name,
         }));
         setDistricts(data);
+        console.log(data);
       } catch (error) {
         console.error(error);
       }
@@ -77,23 +78,17 @@ const Index = () => {
     }
   };
 
-  const postData = async () => {
-    const data = {
-      district: selectedItem1.value,
-      block: selectedItem2.value,
-      // gp: selectedItem3.value,
-    };
-    console.log(data);
-    // try {
-    //   const response = await axios.post(`${baseUrl}/set`, data, {
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //   });
-    //   console.log(response.data);
-    // } catch (error) {
-    //   console.error(error);
-    // }
+  const postData = () => {
+    if (selectedItem1 && selectedItem2 && selectedItem3) {
+      const data = {
+        district: selectedItem1.value,
+        block: selectedItem2.value,
+        gp: selectedItem3.value,
+      };
+      console.log("Selected Data:", data);
+    } else {
+      console.warn("Please select all fields before submitting.");
+    }
   };
 
   const handleToggleDropdown = (dropdownId) => {
@@ -154,7 +149,10 @@ const Index = () => {
           <Button
             text={"Set Details"}
             size="full"
-            onPress={() => router.navigate("activity")}
+            onPress={()=>{
+              postData();
+              router.navigate("activity")}
+            }
           />
         </View>
       </View>
