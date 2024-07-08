@@ -68,7 +68,7 @@ const Dropdown = ({
               <FlatList
                 data={data}
                 renderItem={renderItem}
-                keyExtractor={(item) => item.value.toString()}
+                keyExtractor={(item) => item.value.toString()}                
               />
             </View>
           </View>
