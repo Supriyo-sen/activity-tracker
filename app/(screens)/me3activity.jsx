@@ -11,9 +11,11 @@ import { useRouter } from "expo-router";
 import { Category, Indicator, WorkStatus } from "../../static/index";
 import Button from "../../components/Button";
 import axios from "axios";
+import { useNavigation } from "@react-navigation/native";
 
 const me3activity = () => {
   const router = useRouter();
+  const navigation = useNavigation();
   const [openDropdown, setOpenDropdown]   = useState(null);
   const [selectedItem1, setSelectedItem1] = useState(null);
   const [selectedItem2, setSelectedItem2] = useState(null);
@@ -60,7 +62,7 @@ const me3activity = () => {
           },
         });
         Alert.alert("Success", response.data.message);
-        router.navigate("camerapage");
+        navigation.navigate("camerapage", { WorkStatus: selectedItem3.value, work_id: selectedItem4.value});
       } catch (error) {
         if (error.response) {
           Alert.alert("Error", error.response.data.message);
