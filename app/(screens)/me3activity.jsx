@@ -23,7 +23,7 @@ const me3activity = () => {
   const [selectedItem4, setSelectedItem4] = useState(null);
   const [workId, setWorkId] = useState([]);
 
-  const baseUrl = "http://192.168.0.59:5000/user";
+  const baseUrl = `${process.env.API_URL}/user`;
 
   const fetchWorkId = async () => {
     try {
@@ -33,7 +33,7 @@ const me3activity = () => {
         },
       });
       const data = response.data.map((workId) => ({
-        label: workId.work_id,
+        label: workId.work_id+" - "+workId.work_desc,
         value: workId.work_id,
       }));
       setWorkId(data);
