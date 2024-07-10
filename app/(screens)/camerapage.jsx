@@ -1,23 +1,24 @@
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { useRef, useState } from "react";
-import {
-  Button,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Alert, Button, StyleSheet, Text, View } from "react-native";
 import IconButton from "../../components/IconButton";
-import {useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import ImagePreview from "../../components/ImagePreview";
 import { CameraType, FlashMode } from "expo-camera/build/legacy/Camera.types";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import axios from "axios";
 
 export default function camerapage() {
-  const router = useRouter();
+  const navigation = useNavigation();
+  const {WorkStatus, work_id} = useRoute().params;
   const [facing, setFacing] = useState(CameraType.back);
   const cameraRef = useRef(null);
   const [flash, setFlash] = useState(FlashMode.off);
   const [permission, requestPermission] = useCameraPermissions();
   const [picture, setPicture] = useState("");
+  const [image, setImage] = useState("");
+  const [source, setSource] = useState("");
+  const [loading , setLoading] = useState(false);
 
   if (!permission) {
     return <View />;
@@ -46,10 +47,12 @@ export default function camerapage() {
     );
   }
 
-  
   const handleTakePicture = async () => {
     if (cameraRef.current) {
-      const response = await cameraRef.current.takePictureAsync();
+      const options = { quality: 0.7, base64: true };
+      const response = await cameraRef.current.takePictureAsync(options);
+      const source = response.base64;
+      setSource(source);
       setPicture(response.uri);
     }
   };
@@ -59,8 +62,48 @@ export default function camerapage() {
   };
 
   const handleContinue = () => {
-    router.navigate("uploadDetails", { picture });
+    if (source) {
+      setLoading(true);
+      let base64Img = `data:image/jpg;base64,${source}`;
+      let apiUrl = "https://api.cloudinary.com/v1_1/dxq3ps3xt/image/upload";
+      let data = {
+        file: base64Img,
+        upload_preset: "activity-tracker",
+      };
+
+      axios
+        .post(apiUrl, data, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          if (response.data.secure_url) {
+            setImage(response.data.secure_url);
+            if(image){
+              setLoading(false);
+              alert("Upload successful");
+              navigation.navigate("uploadDetails", { picture, image, WorkStatus, work_id });
+            }
+          }
+        })
+        .catch((err) => {
+          setLoading(false);
+          alert("Cannot upload", err);
+          return;
+        }).finally(() => {
+          setLoading(false);
+        });
+    }
   };
+
+  if(loading){
+    return (
+      <View style={styles.container}>
+        <Text style={styles.text}>Loading...</Text>
+      </View>
+    );
+  }
 
   if (picture) {
     return (
@@ -107,7 +150,7 @@ export default function camerapage() {
           />
         </View>
       </View>
-    </CameraView> 
+    </CameraView>
   );
 }
 
