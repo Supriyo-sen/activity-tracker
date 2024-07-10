@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, TouchableWithoutFeedback } from "react-native";
+import { StyleSheet, View, TouchableWithoutFeedback, Alert } from "react-native";
 import Dropdown from "../../components/Dropdown";
 import Button from "../../components/Button";
 import { useRouter } from "expo-router";
@@ -11,36 +11,35 @@ const Index = () => {
   const [selectedItem1, setSelectedItem1] = useState(null);
   const [selectedItem2, setSelectedItem2] = useState(null);
   const [selectedItem3, setSelectedItem3] = useState(null);
+  const [imeiNumber, setImeiNumber] = useState("");
 
   const [districts, setDistricts] = useState();
   const [blocks, setBlocks] = useState();
   const [gps, setGps] = useState();
 
   const baseUrl = "http://192.168.0.59:5000/area";
+  const authUrl = "http://192.168.0.59:5000/auth";
+  const fetchDistricts = async () => {
+    try {
+      const response = await axios.get(`${baseUrl}/districts`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = response.data.map((district) => ({
+        label: district.district_name,
+        value: district.district_name,
+      }));
+      setDistricts(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   useEffect(() => {
-    const fetchDistricts = async () => {
-      try {
-        const response = await axios.get(`${baseUrl}/districts`, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        console.log(response.data);
-        const data = response.data.map((district) => ({
-          label: district.district_name,
-          value: district.district_name,
-        }));
-        setDistricts(data);
-        console.log(data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
     fetchDistricts();
   }, []);
 
   const fetchBlocks = async (item) => {
-    // console.log(item);
     const blockUrl = `${baseUrl}/block/${item.value}`;
     try {
       const response = await axios.get(blockUrl, {
@@ -53,7 +52,6 @@ const Index = () => {
         value: block.block_name,
       }));
       setBlocks(data);
-      // console.log(data);
     } catch (error) {
       console.error(error);
     }
@@ -78,18 +76,37 @@ const Index = () => {
     }
   };
 
-  const postData = () => {
+  const postData = async () => {
     if (selectedItem1 && selectedItem2 && selectedItem3) {
       const data = {
-        district: selectedItem1.value,
-        block: selectedItem2.value,
-        gp: selectedItem3.value,
+        district_name: selectedItem1.value,
+        block_name: selectedItem2.value,
+        gp_name: selectedItem3.value,
+        imei_number: "523456789012349",
       };
-      console.log("Selected Data:", data);
+
+      try {
+        const response = await axios.post(`${authUrl}/validate`, data, {
+          headers: {
+            "Content-Type": "application/json", 
+          },
+        });
+
+        if (response.status === 200) {
+          Alert.alert("Login successful", response.data.message);
+          router.navigate("activity");
+        } else {
+          Alert.alert("Login failed: ", response.data.message);
+          return;
+        }
+      } catch (error) {
+        Alert.alert("Error", error.response.data.message);
+      }
     } else {
-      console.warn("Please select all fields before submitting.");
+      Alert.alert("Please fill all the fields");
     }
   };
+
 
   const handleToggleDropdown = (dropdownId) => {
     setOpenDropdown(dropdownId === openDropdown ? null : dropdownId);
@@ -138,23 +155,18 @@ const Index = () => {
               onToggle={() => handleToggleDropdown("dropdown3")}
               selectedItem={selectedItem3}
               onSelect={(item) => {
-                console.log(item);
                 setSelectedItem3(item);
-                console.log(selectedItem3);
                 handleCloseDropdowns();
-                postData();
               }}
             />
           </View>
           <Button
             text={"Set Details"}
             size="full"
-            onPress={()=>{
-              postData();
-              router.navigate("activity")}
-            }
+            onPress={postData}
           />
         </View>
+        
       </View>
     </TouchableWithoutFeedback>
   );

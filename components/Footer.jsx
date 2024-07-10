@@ -13,7 +13,8 @@ const styles = StyleSheet.create({
   main: {
     width: "100%",
     height: 56,
-    backgroundColor: "#0D38CE"
+    backgroundColor: "#0D38CE",
+    position: "static"
   },
 });
 
