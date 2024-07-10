@@ -1,23 +1,21 @@
 import { CameraView, useCameraPermissions } from "expo-camera";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import {
   Button,
-  Image,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from "react-native";
 import IconButton from "../../components/IconButton";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useRouter } from "expo-router";
+import {useRouter } from "expo-router";
 import ImagePreview from "../../components/ImagePreview";
+import { CameraType, FlashMode } from "expo-camera/build/legacy/Camera.types";
 
 export default function camerapage() {
   const router = useRouter();
-  const [facing, setFacing] = useState("back");
+  const [facing, setFacing] = useState(CameraType.back);
   const cameraRef = useRef(null);
-  const [zoom, setZoom] = useState(0);
+  const [flash, setFlash] = useState(FlashMode.off);
   const [permission, requestPermission] = useCameraPermissions();
   const [picture, setPicture] = useState("");
 
@@ -36,18 +34,19 @@ export default function camerapage() {
     );
   }
 
-  function toggleCameraFacing() {
-    setFacing((current) => (current === "back" ? "front" : "back"));
+  function camerafacingtoggle() {
+    setFacing((current) =>
+      current === CameraType.front ? CameraType.back : CameraType.front
+    );
   }
 
-  function zoomIn() {
-    setZoom((current) => (current + 0.1 <= 1 ? current + 0.1 : 1));
+  function flashlighttoggle() {
+    setFlash((current) =>
+      current === FlashMode.off ? FlashMode.torch : FlashMode.off
+    );
   }
 
-  function zoomOut() {
-    setZoom((current) => (current - 0.1 >= 0 ? current - 0.1 : 0));
-  }
-
+  
   const handleTakePicture = async () => {
     if (cameraRef.current) {
       const response = await cameraRef.current.takePictureAsync();
@@ -77,11 +76,19 @@ export default function camerapage() {
     <CameraView
       style={styles.camera}
       facing={facing}
-      zoom={zoom}
       ref={cameraRef}
+      flash={flash}
     >
       <View style={styles.container}>
         <View style={styles.buttonContainer}>
+          <IconButton
+            iconName={"flashlight"}
+            iconType={"MaterialCommunityIcons"}
+            onPress={flashlighttoggle}
+            style={styles.flip}
+            size={40}
+            color={"black"}
+          />
           <IconButton
             iconName={"camera"}
             iconType={"AntDesign"}
@@ -90,47 +97,65 @@ export default function camerapage() {
             style={styles.continue}
             color={"black"}
           />
-        </View>
-        <IconButton
+          <IconButton
             iconName={"camera-flip-outline"}
             iconType={"MaterialCommunityIcons"}
-            onPress={toggleCameraFacing}
-            style={styles.close}
+            onPress={camerafacingtoggle}
+            style={styles.flip}
             size={40}
+            color={"black"}
           />
+        </View>
       </View>
-    </CameraView>
+    </CameraView> 
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "flex-end",
     padding: 14,
     display: "flex",
-    position: "relative"
+    position: "relative",
   },
   camera: {
     flex: 1,
   },
   buttonContainer: {
-    flex: 1,
-    flexDirection: "column",
-    backgroundColor: "transparent",
-    justifyContent: "flex-end",
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
+    position: "absolute",
+    bottom: 20,
+    width: "100%",
+    paddingHorizontal: 10,
   },
   continue: {
     backgroundColor: "white",
     width: 60,
     height: 60,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 30,
+    marginLeft: 20,
   },
-  close: {
-    display: "flex",
-    top: 20,
-    right: 20,
-    position: "absolute",
+  flip: {
+    backgroundColor: "white",
+    width: 60,
+    height: 60,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 30,
+    marginLeft: 25,
+  },
+  flash: {
+    backgroundColor: "white",
+    width: 60,
+    height: 60,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 30,
   },
   text: {
     fontSize: 24,

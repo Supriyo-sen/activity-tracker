@@ -33,6 +33,7 @@ export default function App() {
   return (
       <Stack screenOptions={{headerShown: false}}>
         <Stack.Screen name="overview"/>
+        <Stack.Screen name="(screens)"/>
       </Stack>
   );
 }

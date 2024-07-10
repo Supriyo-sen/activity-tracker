@@ -1,11 +1,12 @@
 import {
   ImageBackground,
+  ScrollView,
   StyleSheet,
   View,
 } from "react-native";
 import React, { useState } from "react";
 import Inputfield from "../../components/Inputfield";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import Button from "../../components/Button";
 import Clickedimg from "../../components/Clickedimg";
 
@@ -18,7 +19,10 @@ const uploadDetails = () => {
 
   state = { text: "" };
 
+  
+
   return (
+  
     <ImageBackground
       source={require("../../assets/images/app-bg.png")}
       resizeMode="cover"
@@ -64,6 +68,7 @@ const uploadDetails = () => {
         </View>
       </View>
     </ImageBackground>
+  
   );
 };
 

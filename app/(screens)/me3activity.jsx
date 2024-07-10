@@ -1,24 +1,77 @@
 import {
+  Alert,
   ImageBackground,
   StyleSheet,
-  Text,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Dropdown from "../../components/Dropdown";
-import Inputfield from "../../components/Inputfield";
 import { useRouter } from "expo-router";
-import { options } from "../../static/index";
+import { Category, Indicator, WorkStatus } from "../../static/index";
 import Button from "../../components/Button";
+import axios from "axios";
 
 const me3activity = () => {
   const router = useRouter();
-  const [input, setInput] = useState("");
-  const [openDropdown, setOpenDropdown] = useState(null);
+  const [openDropdown, setOpenDropdown]   = useState(null);
   const [selectedItem1, setSelectedItem1] = useState(null);
   const [selectedItem2, setSelectedItem2] = useState(null);
   const [selectedItem3, setSelectedItem3] = useState(null);
+  const [selectedItem4, setSelectedItem4] = useState(null);
+  const [workId, setWorkId] = useState([]);
+
+  const baseUrl = "http://192.168.0.59:5000/user";
+
+  const fetchWorkId = async () => {
+    try {
+      const response = await axios.get(`${baseUrl}/progress`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = response.data.map((workId) => ({
+        label: workId.work_id,
+        value: workId.work_id,
+      }));
+      setWorkId(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchWorkId();
+  }, []);
+
+  const postData = async () => {
+    if (selectedItem1 && selectedItem2 && selectedItem3 && selectedItem4) {
+      const data = {
+        category: selectedItem1.value,
+        indicator: selectedItem2.value,
+        work_status: selectedItem3.value,
+        work_id: selectedItem4.value,
+      };
+
+      try {
+        const response = await axios.post(`${baseUrl}/progress`, data, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        Alert.alert("Success", response.data.message);
+        router.navigate("camerapage");
+      } catch (error) {
+        if (error.response) {
+          Alert.alert("Error", error.response.data.message);
+        } else {
+          Alert.alert("Error", error.message);
+        }
+      }
+    } else {
+      Alert.alert("Please select all the fields");
+    }
+  };
 
   const handleToggleDropdown = (dropdownId) => {
     setOpenDropdown(dropdownId === openDropdown ? null : dropdownId);
@@ -27,7 +80,6 @@ const me3activity = () => {
   const handleCloseDropdowns = () => {
     setOpenDropdown(null);
   };
-  state = { text: "" };
 
   return (
     <TouchableWithoutFeedback onPress={handleCloseDropdowns}>
@@ -40,7 +92,7 @@ const me3activity = () => {
           <View style={styles.main}>
             <View style={styles.dropitems}>
               <Dropdown
-                data={options}
+                data={Category}
                 size="full"
                 header={"Select Category :"}
                 isOpen={openDropdown === "dropdown1"}
@@ -51,8 +103,9 @@ const me3activity = () => {
                   handleCloseDropdowns();
                 }}
               />
+
               <Dropdown
-                data={options}
+                data={Indicator}
                 size="full"
                 header={"Select Indicator :"}
                 isOpen={openDropdown === "dropdown2"}
@@ -64,7 +117,7 @@ const me3activity = () => {
                 }}
               />
               <Dropdown
-                data={options}
+                data={WorkStatus}
                 size="full"
                 header={"Select Work Status :"}
                 isOpen={openDropdown === "dropdown3"}
@@ -75,17 +128,23 @@ const me3activity = () => {
                   handleCloseDropdowns();
                 }}
               />
-              <Inputfield
-                header="Work ID :"
-                onChangeText={(text) => setInput(text)}
-                value={input}
+              <Dropdown
+                data={workId}
                 size="full"
+                header={"Work ID :"}
+                isOpen={openDropdown === "dropdown4"}
+                onToggle={() => handleToggleDropdown("dropdown4")}
+                selectedItem={selectedItem4}
+                onSelect={(item) => {
+                  setSelectedItem4(item);
+                  handleCloseDropdowns();
+                }}
               />
             </View>
             <Button
               text={"Save"}
               size="full"
-              onPress={() => router.navigate("camerapage")}
+              onPress={postData}
             />
           </View>
         </View>
@@ -118,5 +177,3 @@ const styles = StyleSheet.create({
     gap: 15,
   },
 });
-
-// Insert Work ID :
