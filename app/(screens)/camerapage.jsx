@@ -65,10 +65,10 @@ export default function camerapage() {
     if (source) {
       setLoading(true);
       let base64Img = `data:image/jpg;base64,${source}`;
-      let apiUrl = "https://api.cloudinary.com/v1_1/dxq3ps3xt/image/upload";
+      let apiUrl = process.env.CD_URL;
       let data = {
         file: base64Img,
-        upload_preset: "activity-tracker",
+        upload_preset: process.env.CD_UPLOAD_PRESET,
       };
 
       axios
