@@ -81,7 +81,7 @@ const Dropdown = ({
 const styles = StyleSheet.create({
   main: {
     width: 365,
-    height: 90,
+    height: "auto",
     backgroundColor: "#E4EAFF",
     borderRadius: 5,
     padding: 10,

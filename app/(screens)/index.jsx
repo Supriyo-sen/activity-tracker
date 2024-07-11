@@ -17,8 +17,8 @@ const Index = () => {
   const [blocks, setBlocks] = useState();
   const [gps, setGps] = useState();
 
-  const baseUrl = "http://192.168.0.59:5000/area";
-  const authUrl = "http://192.168.0.59:5000/auth";
+  const baseUrl = `${process.env.API_URL}/area`;
+  const authUrl = `${process.env.API_URL}/auth`;
   const fetchDistricts = async () => {
     try {
       const response = await axios.get(`${baseUrl}/districts`, {
