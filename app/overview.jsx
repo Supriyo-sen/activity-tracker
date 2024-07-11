@@ -8,7 +8,7 @@ const overview = () => {
   useLayoutEffect(() => {
     const timer = setTimeout(() => {
       router.navigate("(screens)"); 
-    }, 2000); 
+    }, 5000); 
 
     return () => clearTimeout(timer); 
   }, []);
